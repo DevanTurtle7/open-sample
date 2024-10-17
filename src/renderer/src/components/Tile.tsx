@@ -56,7 +56,6 @@ const Tile = ({
     setStartTime(Number(event.target.value))
 
     if (audio != undefined && activationKey != undefined) {
-      console.log('updating start time')
       updateStartTime(activationKey, Number(event.target.value))
     }
   }

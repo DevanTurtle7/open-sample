@@ -46,7 +46,6 @@ function App(): JSX.Element {
   }, [audioMap, keysPressed, setKeysPressed])
 
   const onAudioChange = (key: string, audio: Tone.Player, startTime: number): void => {
-    console.log(`setting audio with start time: ${startTime}`)
     setAudioMap({ ...audioMap, [key]: { audio, startTime: startTime } })
   }
 
