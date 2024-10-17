@@ -9,3 +9,10 @@
 .tile-active {
   background-color: red;
 }
+
+.tiles-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  width: fit-content;
+  height: fit-content;
+}

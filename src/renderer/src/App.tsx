@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
-import Tile from './components/tile'
+import * as Tone from 'tone'
+import Tile from './components/Tile'
 
 function App(): JSX.Element {
   const [audioMap, setAudioMap] = useState({})
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set())
 
   useEffect(() => {
+    Tone.loaded()
+  }, [])
+
+  useEffect(() => {
     const handleKeyDown = (event): void => {
       if (event.key in audioMap && !keysPressed.has(event.key)) {
         console.log(`Key pressed: "${event.key}"`)
         const { audio, startTime } = audioMap[event.key]
-        audio.currentTime = startTime
-        audio.play()
+        audio.start(0, startTime)
         setKeysPressed((prev) => new Set([...prev, event.key]))
       }
     }
@@ -29,7 +33,7 @@ function App(): JSX.Element {
 
       if (event.key in audioMap) {
         const { audio } = audioMap[event.key]
-        audio.pause()
+        audio.stop()
         setKeysPressed((prev) => new Set([...prev].filter((x) => x != event.key)))
       }
     }
@@ -41,7 +45,7 @@ function App(): JSX.Element {
     }
   }, [audioMap, keysPressed, setKeysPressed])
 
-  const onAudioChange = (key: string, audio: HTMLAudioElement, startTime: number): void => {
+  const onAudioChange = (key: string, audio: Tone.Player, startTime: number): void => {
     console.log(`setting audio with start time: ${startTime}`)
     setAudioMap({ ...audioMap, [key]: { audio, startTime: startTime } })
   }
@@ -61,27 +65,28 @@ function App(): JSX.Element {
 
   console.log(audioMap)
 
+  const getTiles = (): JSX.Element[] => {
+    const tiles: JSX.Element[] = []
+
+    for (let i = 0; i < 16; i++) {
+      tiles.push(
+        <Tile
+          onAudioChange={onAudioChange}
+          deletePrevKey={deletePrevKey}
+          updateStartTime={updateStartTime}
+          keysPressed={keysPressed}
+          key={`tile${i}`}
+        />
+      )
+    }
+
+    return tiles
+  }
+
   return (
     <>
       <h1>open sample</h1>
-      <Tile
-        onAudioChange={onAudioChange}
-        deletePrevKey={deletePrevKey}
-        updateStartTime={updateStartTime}
-        keysPressed={keysPressed}
-      />
-      <Tile
-        onAudioChange={onAudioChange}
-        deletePrevKey={deletePrevKey}
-        updateStartTime={updateStartTime}
-        keysPressed={keysPressed}
-      />
-      <Tile
-        onAudioChange={onAudioChange}
-        deletePrevKey={deletePrevKey}
-        updateStartTime={updateStartTime}
-        keysPressed={keysPressed}
-      />
+      <div className="tiles-container">{getTiles()}</div>
     </>
   )
 }
