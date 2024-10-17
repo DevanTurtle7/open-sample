@@ -1,0 +1,11 @@
+.tile {
+  background-color: grey;
+  height: 200px;
+  width: 200px;
+  margin: 4px;
+  padding: 4px;
+}
+
+.tile-active {
+  background-color: red;
+}
