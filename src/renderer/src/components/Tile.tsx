@@ -36,10 +36,9 @@ const Tile = ({
 
   const onFileUpload = (event): void => {
     const url = URL.createObjectURL(event.target.files[0])
-    const player = new Tone.Player(url).toDestination()
-    player.load(url)
-
-    setAudio(player)
+    const player = new Tone.Player(url, () => {
+      setAudio(player)
+    }).toDestination()
 
     player.volume.value = volume
     player.playbackRate = playbackRate
